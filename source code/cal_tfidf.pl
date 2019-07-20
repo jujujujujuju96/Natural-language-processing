@@ -1,0 +1,43 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+#変数，配列の宣言
+my $line = ();
+my $r_fname = $ARGV[0];
+my $w_fname = $ARGV[1];
+my @data = ();
+my $tmp_word = ();
+my $tmp_pos = ();
+my $tmp_tf = ();
+my $tmp_df = ();
+my $tfidf = ();
+my $a = ();
+my $b = ();
+
+#ファイルを開く
+open(RFP, $r_fname) ||die "can't open $r_fname \n";
+#書き出すファイルを開く
+open(WFP,"> $w_fname") ||die "can't open $w_fname \n";
+
+while($line = <RFP>){
+    #改行コードの削除
+    chomp($line);
+    #$lineを分割
+    ($tmp_word,$tmp_pos,$tmp_tf,$tmp_df)=split(/\t/,$line);
+    $a =$tmp_df+1;
+    $b = 34428/$a;
+
+    $tfidf= (log($b)+1)*$tmp_tf;
+    $tfidf = sprintf("%.2f", $tfidf);
+
+	#ファイルへ$lineを書き出し
+	print WFP "$tmp_word\t$tmp_pos\t$tmp_tf\t$tmp_df\t$tfidf\n";
+	#print WFP "$line\n";
+	#print "$line\n";
+ 
+}
+close(WFP);
+close(RFP);
+
+
